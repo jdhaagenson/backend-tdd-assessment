@@ -7,7 +7,7 @@ Students are expected to edit this module, to add more tests to run
 against the 'echo.py' program.
 """
 
-__author__ = "???"
+__author__ = "Jordan Haagenson"
 
 import sys
 import importlib
@@ -73,7 +73,8 @@ class TestEcho(unittest.TestCase):
             }
         # check the module for required functions
         assert "main" in cls.funcs, "Missing required function main()"
-        assert "create_parser" in cls.funcs, "Missing required function create_parser()"
+        assert "create_parser" in cls.funcs, "Missing required function \
+                                                create_parser()"
 
     def setUp(self):
         """Called by parent class ONCE before all tests are run"""
@@ -88,9 +89,14 @@ class TestEcho(unittest.TestCase):
             result, argparse.ArgumentParser,
             "create_parser() function is not returning a parser object")
 
-    #
-    # Students: add more parser tests here
-    #
+    def test_help(self):
+        """Running the program without arguments should show usage"""
+        args = ["-h"]
+        with open("USAGE") as f:
+            usage = f.read().splitlines()
+        with Capturing() as output:
+            self.module.main(args)
+        self.assertEqual(output, usage)
 
     def test_echo(self):
         """Check if main() function prints anything at all"""
@@ -114,9 +120,62 @@ class TestEcho(unittest.TestCase):
         assert output, "The program did not print anything."
         self.assertEqual(output[0], "hello world")
 
-    #
-    # Students: add more cmd line options tests here.
-    #
+    def test_lower(self):
+        """Checks if '--lower' performs lowercasing"""
+        args = ["--lower", "HELLO WORLD"]
+        with Capturing() as output:
+            self.module.main(args)
+        assert output, "The program did not print anything."
+        self.assertEqual(output[0], "hello world")
+
+    def test_upper_short(self):
+        """Check if short option '-u' performs uppercasing"""
+        args = ["-u", "hello world"]
+        with Capturing() as output:
+            self.module.main(args)
+        assert output, "The program did not print anything."
+        self.assertEqual(output[0], "HELLO WORLD")
+
+    def test_upper(self):
+        """Checks if '--upper' performs uppercasing"""
+        args = ["--upper", "hello world"]
+        with Capturing() as output:
+            self.module.main(args)
+        assert output, "The program did not print anything."
+        self.assertEqual(output[0], "HELLO WORLD")
+
+    def test_title_short(self):
+        """Checks if short option '-t' performs title casing"""
+        args = ["-t", "hello world"]
+        with Capturing() as output:
+            self.module.main(args)
+        assert output, "The program did not print anything."
+        self.assertEqual(output[0], "Hello World")
+    
+    def test_title(self):
+        """Checks if '--title' performs title casing"""
+        args = ["--title", " hello world"]
+        with Capturing() as output:
+            self.module.main(args)
+        assert output, "The program didn't print anything."
+        self.assertEqual(output[0], "Hello World")
+
+    def test_all_short(self):
+        """Checks when all options are passed"""
+        args = ["-ult", "hELlo WoRLd"]
+        with Capturing() as output:
+            self.module.main(args)
+        assert output, "The program did not print anything."
+        self.assertEqual(output[0], "Hello World")
+    
+    def test_noargs(self):
+        """Checks that when there are no arguments passed, it just returns unaltered text"""
+        args = ["Hello WORLD"]
+        with Capturing() as output:
+            self.module.main(args)
+        assert output, "The program did not print anything"
+        self.assertEqual(output[0], "Hello WORLD")
+        
 
 
 if __name__ == '__main__':
