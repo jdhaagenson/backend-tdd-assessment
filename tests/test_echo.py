@@ -79,15 +79,17 @@ class TestEcho(unittest.TestCase):
     def setUp(self):
         """Called by parent class ONCE before all tests are run"""
         self.parser = self.module.create_parser()
+        return self.parser
 
     def test_no_options(self):
-        """Check if no options were passed"""
+        """Checking if no arguments creates only text in namespace"""
         args = ["text"]
         ns = self.parser.parse_args(args)
         stdout, stderr = run_capture(self.module.__file__, args="something")
         self.assertFalse(ns.title)
         self.assertFalse(ns.upper)
-        self.assertFalse(n.lower)
+        self.assertFalse(ns.lower)
+        self.assertTrue(ns.text)
 
     def test_parser(self):
         """Check if create_parser() returns a parser object"""
@@ -101,8 +103,7 @@ class TestEcho(unittest.TestCase):
         args = ["-h"]
         with open("USAGE") as f:
             usage = f.read().splitlines()
-        with Capturing() as output:
-            self.module.main(args)
+        output, error = run_capture(self.module.__file__, args)
         self.assertEqual(output, usage)
 
     def test_echo(self):
@@ -125,6 +126,7 @@ class TestEcho(unittest.TestCase):
             self.module.main(args)
         assert output, "The program did not print anything."
         self.assertEqual(output[0], "hello world")
+        self.assertTrue(self.parser.parse_args(args), )
 
     def test_lower(self):
         """Checks if '--lower' performs lowercasing"""
@@ -160,7 +162,7 @@ class TestEcho(unittest.TestCase):
 
     def test_title(self):
         """Checks if '--title' performs title casing"""
-        args = ["--title", " hello world"]
+        args = ["--title", "hello world"]
         with Capturing() as output:
             self.module.main(args)
         assert output, "The program did not print anything."
@@ -173,15 +175,6 @@ class TestEcho(unittest.TestCase):
             self.module.main(args)
         assert output, "The program did not print anything."
         self.assertEqual(output[0], "Hello World")
-
-    def test_noargs(self):
-        """Checks that when there are no arguments passed, \
-        it just returns unaltered text"""
-        args = ["Hello WORLD"]
-        with Capturing() as output:
-            self.module.main(args)
-        assert output, "The program did not print anything"
-        self.assertEqual(output[0], "Hello WORLD")
 
 
 if __name__ == '__main__':

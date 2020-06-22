@@ -30,16 +30,16 @@ def title(text: str):
 
 def create_parser():
     """Returns an instance of argparse.ArgumentParser"""
-    parser = argparse.ArgumentParser(description="Perform transformation on\
-                                                 input text.")
-    parser.add_argument("-u", "--upper", action="store_true", help='convert \
-                                                text to uppercase')
-    parser.add_argument("-l", "--lower", action="store_true", help="convert \
-                                                text to lowercase")
-    parser.add_argument("-t", "--title", action="store_true", help="convert \
-                                                text to titlecase")
-    parser.add_argument('text', default="hElLo WoRlD", help="text to be \
-                                                            manipulated")
+    parser = argparse.ArgumentParser(
+        description="Perform transformation on input text.")
+    parser.add_argument(
+        "-u", "--upper", action="store_true", help='convert text to uppercase')
+    parser.add_argument(
+        "-l", "--lower", action="store_true", help="convert text to lowercase")
+    parser.add_argument(
+        "-t", "--title", action="store_true", help="convert text to titlecase")
+    parser.add_argument(
+        'text', default="hElLo WoRlD", help="text to be manipulated")
     return parser
 
 
