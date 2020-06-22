@@ -9,23 +9,57 @@ import sys
 import argparse
 
 
+def help():
+    with open("USAGE") as f:
+        usage = f.read().splitlines()
+    print(usage)
+    return usage
+
+
+def upper(text: str):
+    return text.upper()
+
+
+def lower(text: str):
+    return text.lower()
+
+
+def title(text: str):
+    return text.title()
+
+
 def create_parser():
     """Returns an instance of argparse.ArgumentParser"""
     parser = argparse.ArgumentParser(description="Perform transformation on\
                                                  input text.")
+    parser.add_argument("-u", "--upper", action="store_true", help='convert \
+                                                text to uppercase')
+    parser.add_argument("-l", "--lower", action="store_true", help="convert \
+                                                text to lowercase")
+    parser.add_argument("-t", "--title", action="store_true", help="convert \
+                                                text to titlecase")
+    parser.add_argument('text', default="hElLo WoRlD", help="text to be \
+                                                            manipulated")
     return parser
 
 
 def main(args):
     """Implementation of echo"""
     parser = create_parser()
-    parser.add_argument("-h" "--help", help="show this message and exit")
-    parser.add_argument("-u", "--upper", help='convert text to uppercase')
-    parser.add_argument("-l", "--lower", help="convert text to lowercase")
-    parser.add_argument("-t", "--title", help="convert text to titlecase")
-    parser.add_argument('text', help="text to be manipulated")
+    ns = parser.parse_args(args)
+    result = ns.text
 
-    return
+    if ns.title:
+        result = title(result)
+    elif ns.lower:
+        result = lower(result)
+    elif ns.upper:
+        result = upper(result)
+    else:
+        result = result
+
+    print(result)
+    return(result)
 
 
 if __name__ == '__main__':

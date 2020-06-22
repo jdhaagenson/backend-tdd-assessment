@@ -78,9 +78,16 @@ class TestEcho(unittest.TestCase):
 
     def setUp(self):
         """Called by parent class ONCE before all tests are run"""
-        # your code here - use this space to create any instance variables
-        # that will be visible to your other test methods
-        pass
+        self.parser = self.module.create_parser()
+
+    def test_no_options(self):
+        """Check if no options were passed"""
+        args = ["text"]
+        ns = self.parser.parse_args(args)
+        stdout, stderr = run_capture(self.module.__file__, args="something")
+        self.assertFalse(ns.title)
+        self.assertFalse(ns.upper)
+        self.assertFalse(n.lower)
 
     def test_parser(self):
         """Check if create_parser() returns a parser object"""
@@ -101,7 +108,6 @@ class TestEcho(unittest.TestCase):
     def test_echo(self):
         """Check if main() function prints anything at all"""
         stdout, stderr = run_capture(self.module.__file__)
-        pass
 
     def test_simple_echo(self):
         """Check if main actually echoes an input string"""
@@ -151,13 +157,13 @@ class TestEcho(unittest.TestCase):
             self.module.main(args)
         assert output, "The program did not print anything."
         self.assertEqual(output[0], "Hello World")
-    
+
     def test_title(self):
         """Checks if '--title' performs title casing"""
         args = ["--title", " hello world"]
         with Capturing() as output:
             self.module.main(args)
-        assert output, "The program didn't print anything."
+        assert output, "The program did not print anything."
         self.assertEqual(output[0], "Hello World")
 
     def test_all_short(self):
@@ -167,15 +173,15 @@ class TestEcho(unittest.TestCase):
             self.module.main(args)
         assert output, "The program did not print anything."
         self.assertEqual(output[0], "Hello World")
-    
+
     def test_noargs(self):
-        """Checks that when there are no arguments passed, it just returns unaltered text"""
+        """Checks that when there are no arguments passed, \
+        it just returns unaltered text"""
         args = ["Hello WORLD"]
         with Capturing() as output:
             self.module.main(args)
         assert output, "The program did not print anything"
         self.assertEqual(output[0], "Hello WORLD")
-        
 
 
 if __name__ == '__main__':
